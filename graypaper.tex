@@ -1,23 +1,15 @@
 \documentclass[9pt,oneside]{amsart}
 \input{preamble.tex}
-\pagecolor{verydarkgray}
-\color{white}
 
-%\pagecolor{white}
-%\AddToShipoutPicture{
-%  \checkoddpage
-%  \ifoddpage
-%    \put(-1 mm,0){\includegraphics[width=\paperwidth,height=\paperheight]{assets/grayr.png}}
-%  \else
-%    \put(-1 mm,0){\includegraphics[width=\paperwidth,height=\paperheight]{assets/grayl.png}}
-%\fi
-%}
+% This is provided by the CI by copying one of the `style/bg_*` files.
+\input{style/bg}
 
 \begin{document}
 
 \input{text/abstract.tex}
 \begin{center}
-    \includegraphics[width=10cm]{assets/jam-pen-back.png}
+    % This is provided by the CI by copying one of the `style/logo_*` files.
+    \input{style/logo}
 \end{center}
 \vskip10pt
 \maketitle
