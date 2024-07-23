@@ -1,10 +1,10 @@
-name: Build LaTeX document
+name: Render PDF
 
 on:
   push:
-    branches: ["master"]
+    branches: ["main"]
   pull_request:
-    branches: ["master"]
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
@@ -14,7 +14,7 @@ jobs:
       - name: Set up Git repository
         uses: actions/checkout@v4
     
-      - name: Compile LaTeX document
+      - name: Render
         uses: xu-cheng/latex-action@v3
         with:
           root_file: graypaper.tex
@@ -30,7 +30,7 @@ jobs:
         run: |
           mv style/bg_gray_plain.tex style/bg.tex
     
-      - name: Compile LaTeX document
+      - name: Render
         uses: xu-cheng/latex-action@v3
         with:
           root_file: graypaper.tex
@@ -47,7 +47,7 @@ jobs:
           mv style/bg_white_plain.tex style/bg.tex
           mv style/logo_black.tex style/logo.tex
     
-      - name: Compile LaTeX document
+      - name: Render
         uses: xu-cheng/latex-action@v3
         with:
           root_file: graypaper.tex
