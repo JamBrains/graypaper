@@ -13,13 +13,48 @@ jobs:
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v4
+    
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
           root_file: graypaper.tex
           latexmk_use_xelatex: true
-      - name: Upload PDF file
+
+      - name: Upload With Gray Graphic BG
         uses: actions/upload-artifact@v4
         with:
-          name: Graypaper
+          name: Graypaper - Gray Graphic BG
+          path: graypaper.pdf
+
+      - name: Configure plain gray background
+        run: |
+          mv style/bg_gray_plain.tex style/bg.tex
+    
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: graypaper.tex
+          latexmk_use_xelatex: true
+
+      - name: Upload With Gray BG
+        uses: actions/upload-artifact@v4
+        with:
+          name: Graypaper - Gray BG
+          path: graypaper.pdf
+
+      - name: Configure white background
+        run: |
+          mv style/bg_white_plain.tex style/bg.tex
+          mv style/logo_black.tex style/logo.tex
+    
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: graypaper.tex
+          latexmk_use_xelatex: true
+  
+      - name: Upload With White BG
+        uses: actions/upload-artifact@v4
+        with:
+          name: Graypaper - White BG
           path: graypaper.pdf
