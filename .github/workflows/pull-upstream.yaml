@@ -1,0 +1,16 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '0 * * * *' # every hour
+  workflow_dispatch: # or manual trigger
+
+jobs:
+  sync:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync
+        run: gh repo sync jambrains/graypaper -b main
