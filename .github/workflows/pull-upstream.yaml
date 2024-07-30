@@ -2,11 +2,8 @@ name: Sync Fork
 
 on:
   schedule:
-    - cron: '0 * * * *' # every hour
-  workflow_dispatch: # or manual trigger
-
-env:
-    GH_TOKEN: ${{ github.token }}
+    - cron: '0 * * * *' # every 60 minutes
+  workflow_dispatch: # on button click
 
 jobs:
   sync:
@@ -14,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Sync
-        run: gh repo sync jambrains/graypaper -b main
+      - uses: tgymnich/fork-sync@v2.0
+        with:
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          base: main
+          head: main
