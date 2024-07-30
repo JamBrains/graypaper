@@ -45,7 +45,7 @@ jobs:
       - name: Configure white background
         run: |
           mv style/bg_white_plain.tex style/bg.tex
-          mv style/logo_black.tex style/logo.tex
+          mv style/logo_white.tex style/logo.tex
     
       - name: Render
         uses: xu-cheng/latex-action@v3
