@@ -17,6 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          github_token: ${{ secrets.PAT }}
+          persist-credentials: false
       - name: Sync
-        run: gh repo sync jambrains/graypaper -b main
+        run: |
+          gh auth login --with-token ${{ secrets.PAT }}
+          gh repo sync jambrains/graypaper -b main
