@@ -1,7 +1,8 @@
 > [!IMPORTANT]
-This is a fork of [the graypaper](https://github.com/gavofyork/graypaper) that automatically renders the `main` branch as PDF. You can download them from the
+This is a fork of [the graypaper](https://github.com/gavofyork/graypaper) repo that automatically
+renders the `main` branch as PDF. You can download the PDFs them from the
 [CI](https://github.com/JamBrains/graypaper/actions/workflows/render-latex.yaml) artifacts when
-clicking on the latest run.
+clicking on the last run.
 
 # Graypaper: The JAM Specification
 
