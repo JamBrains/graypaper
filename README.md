@@ -1,3 +1,9 @@
+> [!IMPORTANT]
+This is a fork of https://github.com/gavofyork/graypaper that automatically renders the PDF from the
+`main` branch. You can download them from the
+[CI](https://github.com/JamBrains/graypaper/actions/workflows/render-latex.yaml) artifacts when
+clicking on the latest run.
+
 # Graypaper: The JAM Specification
 
 The description and formal specification of the Jam protocol, a potential successor to the Polkadot Relay chain.
