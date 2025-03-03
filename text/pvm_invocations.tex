@@ -67,7 +67,7 @@ The Export host-call depends on two pieces of context; one sequence of segments 
 Unlike the other invocation functions, the Refine invocation function implicitly draws upon some recent service account state item $\delta$. The specific block from which this comes is not important, as long as it is no earlier than its work-package's lookup-anchor block. It explicitly accepts the work-package $p$ and the index of the work item to be refined, $i$. Additionally, the authorizer output $\mathbf{o}$ is provided together with all work items' import segments $\overline{\mathbf{i}}$ and an export segment offset $\segoff$. It results in either some error $\mathbb{J}$ or a pair of the refinement output blob and the export sequence. Formally:
 \begin{align}
   &\Psi_R \colon \left\{\begin{aligned}
-    (\N, \mathbb{P}, \Y, \seq{\seq{\G}}, \N) &\to (\Y \cup \mathbb{J}, \seq{\Y}) \\
+    (\N, \mathbb{P}, \Y, \seq{\seq{\G}}, \N) &\to (\Y \cup \mathbb{J}, \seq{\G}) \\
     (i, p, \mathbf{o}, \overline{\mathbf{i}}, \segoff) &\mapsto \begin{cases}
       (\token{BAD}, []) &\when w_s \not\in \keys{\delta} \vee \Lambda(\delta[w_s], (p_\mathbf{x})_t, w_\wi¬codehash) = \none \\
       (\token{BIG}, []) &\otherwhen |\Lambda(\delta[w_s], (p_\mathbf{x})_t, w_\wi¬codehash)| > \mathsf{W}_C \\
@@ -80,7 +80,7 @@ Unlike the other invocation functions, the Refine invocation function implicitly
     \end{cases} \\
   \end{aligned}\right. \\
   \label{eq:refinemutator}
-  &F \in \Omega\ang{(\dict{\N}{\pvm}, \seq{\Y})} \colon
+  &F \in \Omega\ang{(\dict{\N}{\pvm}, \seq{\G})} \colon
     (n, \gascounter, \registers, \memory, (\mathbf{m}, \mathbf{e})) \mapsto \begin{cases}
       \Omega_H(\gascounter, \registers, \memory, (\mathbf{m}, \mathbf{e}), w_s, \delta, (p_\mathbf{x})_t) &\when n = \mathtt{historical\_lookup}\\
       \Omega_Y(\gascounter, \registers, \memory, (\mathbf{m}, \mathbf{e}), i, p, \mathbf{o}, \overline{\mathbf{i}}) &\when n = \mathtt{fetch}\\
@@ -312,7 +312,7 @@ Other than the gas-counter which is explicitly defined, elements of \textsc{pvm}
     \end{cases} \\
     \using [k_o, k_z, o] &= \registers_{8\dots+3} \\
     \using \mathbf{v} &= \begin{cases}
-      \error &\when \mathbb{Z}_{k_o \dots+ k_z} \not\subset \mathbb{V}_{\memory} \\
+      \error &\when \mathbb{N}_{k_o \dots+ k_z} \not\subset \mathbb{V}_{\memory} \\
       \mathbf{a}_\mathbf{s}[k] &\otherwhen \mathbf{a} \ne \none \wedge k \in \keys{\mathbf{a}_\mathbf{s}}\,,\ \where k = \mathcal{H}(\se_4(s^*) \concat \memory_{k_o\dots+k_z}) \\
       \none &\otherwise
     \end{cases} \\
@@ -367,11 +367,11 @@ Other than the gas-counter which is explicitly defined, elements of \textsc{pvm}
       \none &\otherwise
     \end{cases} \\
     \forall i \in \N_{|\mathbf{m}|} : \memory'_{o + i} &\equiv \begin{cases}
-      \mathbf{m}_i & \when \mathbf{m} \ne \none \wedge \mathbb{Z}_{o \dots+ |\mathbf{m}|} \subset \mathbb{V}^*_{\memory} \\
+      \mathbf{m}_i & \when \mathbf{m} \ne \none \wedge \mathbb{N}_{o \dots+ |\mathbf{m}|} \subset \mathbb{V}^*_{\memory} \\
       \memory_{o + i} & \otherwise
     \end{cases} \\
     (\execst', \registers'_7) &\equiv \begin{cases}
-      (\panic, \registers_7) &\when \mathbb{Z}_{o \dots+ |\mathbf{m}|} \not\subset \mathbb{V}^*_{\memory}\\
+      (\panic, \registers_7) &\when \mathbb{N}_{o \dots+ |\mathbf{m}|} \not\subset \mathbb{V}^*_{\memory}\\
       (\continue, \mathtt{NONE}) &\otherwhen \mathbf{m} = \none \\
       (\continue, \mathtt{OK}) &\otherwise \\
     \end{cases}
@@ -405,7 +405,7 @@ Other than the gas-counter which is explicitly defined, elements of \textsc{pvm}
   $\begin{aligned}
     \using [m, a, v, o, n] &= \registers_{7 \dots+ 5} \\
     \using \mathbf{g} &= \begin{cases}
-      \left\{ (s \mapsto g) \ \where \se_4(s) \concat \se_8(g) = \memory_{o+12i\dots+12} \mid i \in \N_n \right\} &\when \mathbb{Z}_{o \dots+ 12n} \subset \mathbb{V}_{\memory} \\
+      \left\{ (s \mapsto g) \ \where \se_4(s) \concat \se_8(g) = \memory_{o+12i\dots+12} \mid i \in \N_n \right\} &\when \mathbb{N}_{o \dots+ 12n} \subset \mathbb{V}_{\memory} \\
       \error &\otherwise
     \end{cases} \\
     (\execst', \registers'_7, (\mathbf{x}'_\mathbf{u})_\mathbf{x}) &= \begin{cases}
@@ -422,7 +422,7 @@ Other than the gas-counter which is explicitly defined, elements of \textsc{pvm}
   $\begin{aligned}
     \using o &= \registers_8 \\
     \using \mathbf{c} &= \begin{cases}
-      \left[\memory_{o + 32i \dots+ 32} \mid i \orderedin \N_\mathsf{Q}\right] &\when \mathbb{Z}_{o \dots+ 32\mathsf{Q}} \subset \mathbb{V}_{\memory} \\
+      \left[\memory_{o + 32i \dots+ 32} \mid i \orderedin \N_\mathsf{Q}\right] &\when \mathbb{N}_{o \dots+ 32\mathsf{Q}} \subset \mathbb{V}_{\memory} \\
       \error &\otherwise
     \end{cases} \\
     (\execst', \registers'_7, (\mathbf{x}'_\mathbf{u})_\mathbf{q}[\registers_7]) &= \begin{cases}
@@ -439,7 +439,7 @@ Other than the gas-counter which is explicitly defined, elements of \textsc{pvm}
   $\begin{aligned}
     \using o &= \registers_7 \\
     \using \mathbf{v} &= \begin{cases}
-      \left[\memory_{o + 336i \dots+ 336} \mid i \orderedin \N_\mathsf{V}\right] &\when \mathbb{Z}_{o \dots+ 336\mathsf{V}} \subset \mathbb{V}_{\memory} \\
+      \left[\memory_{o + 336i \dots+ 336} \mid i \orderedin \N_\mathsf{V}\right] &\when \mathbb{N}_{o \dots+ 336\mathsf{V}} \subset \mathbb{V}_{\memory} \\
       \error &\otherwise
     \end{cases} \\
     (\execst', \registers'_7, (\mathbf{x}'_\mathbf{u})_\mathbf{i}) &= \begin{cases}
@@ -463,7 +463,7 @@ Other than the gas-counter which is explicitly defined, elements of \textsc{pvm}
   $g = 10$} &
   $\begin{aligned}
     \using [o, l, g&, m] = \registers_{7 \dots+ 4} \\
-    \using c &= \begin{cases} 
+    \using c &= \begin{cases}
       \memory_{o\dots+32} &\when \N_{o\dots+32} \subset \mathbb{V}_{\memory} \\
       \error &\otherwise
     \end{cases}\\
@@ -525,7 +525,7 @@ Other than the gas-counter which is explicitly defined, elements of \textsc{pvm}
   $\begin{aligned}
     \using [d, o] &= \registers_{7, 8} \\
     \using h &= \begin{cases}
-      \memory_{o\dots+32} &\when \mathbb{Z}_{o \dots+ 32} \subset \mathbb{V}_{\memory} \\
+      \memory_{o\dots+32} &\when \mathbb{N}_{o \dots+ 32} \subset \mathbb{V}_{\memory} \\
       \error &\otherwise
     \end{cases} \\
     \using \mathbf{d} &= \begin{cases}
@@ -550,7 +550,7 @@ Other than the gas-counter which is explicitly defined, elements of \textsc{pvm}
   $\begin{aligned}
     \using [o, z] &= \registers_{7, 8} \\
     \using h &= \begin{cases}
-      \memory_{o\dots+32} &\when \mathbb{Z}_{o \dots+ 32} \subset \mathbb{V}_{\memory} \\
+      \memory_{o\dots+32} &\when \mathbb{N}_{o \dots+ 32} \subset \mathbb{V}_{\memory} \\
       \error &\otherwise
     \end{cases} \\
     \using \mathbf{a} &= \begin{cases}
@@ -574,7 +574,7 @@ Other than the gas-counter which is explicitly defined, elements of \textsc{pvm}
   $\begin{aligned}
     \using [o, z] &= \registers_{7, 8} \\
     \using h &= \begin{cases}
-      \memory_{o\dots+32} &\when \mathbb{Z}_{o \dots+ 32} \subset \mathbb{V}_{\memory} \\
+      \memory_{o\dots+32} &\when \mathbb{N}_{o \dots+ 32} \subset \mathbb{V}_{\memory} \\
       \error &\otherwise
     \end{cases} \\
     \using \mathbf{a} &= \begin{cases}
@@ -598,7 +598,7 @@ Other than the gas-counter which is explicitly defined, elements of \textsc{pvm}
   $\begin{aligned}
     \using [o, z] &= \registers_{7, 8} \\
     \using h &= \begin{cases}
-      \memory_{o\dots+32} &\when \mathbb{Z}_{o \dots+ 32} \subset \mathbb{V}_{\memory} \\
+      \memory_{o\dots+32} &\when \mathbb{N}_{o \dots+ 32} \subset \mathbb{V}_{\memory} \\
       \error &\otherwise
     \end{cases} \\
     \using \mathbf{a} &= \begin{cases}
@@ -627,7 +627,7 @@ Other than the gas-counter which is explicitly defined, elements of \textsc{pvm}
   $\begin{aligned}
     \using o &= \registers_7 \\
     \using h &= \begin{cases}
-      \memory_{o\dots+32} &\when \mathbb{Z}_{o \dots+ 32} \subset \mathbb{V}_{\memory} \\
+      \memory_{o\dots+32} &\when \mathbb{N}_{o \dots+ 32} \subset \mathbb{V}_{\memory} \\
       \error &\otherwise
     \end{cases} \\
     (\execst', \registers'_7, \mathbf{x}'_y) &\equiv \begin{cases}
@@ -731,7 +731,7 @@ These assume some refine context pair $(\mathbf{m}, \mathbf{e}) \in (\dict{\N}{\
   $\begin{aligned}
     \using [p_o, p_z, i] &= \registers_{7 \dots+ 3} \\
     \using \mathbf{p} &= \begin{cases}
-      \memory_{p_o\dots+p_z} &\when \mathbb{Z}_{p_o \dots+ p_z} \subset \mathbb{V}_{\memory} \\
+      \memory_{p_o\dots+p_z} &\when \mathbb{N}_{p_o \dots+ p_z} \subset \mathbb{V}_{\memory} \\
       \error &\otherwise
     \end{cases} \\
     \using n &= \min(n \in \N, n \not\in \keys{\mathbf{m}}) \\
