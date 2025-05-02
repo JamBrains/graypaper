@@ -34,11 +34,18 @@ Note return codes for a host-call-request exit are any non-zero value less than 
 
 \subsection{Is-Authorized Invocation}\label{sec:isauthorizedinvocation}
 
+\newcommand*{\wpX}{p}
+
 The Is-Authorized invocation is the first and simplest of the four, being totally stateless. It provides only a single host-call function, $\Omega_G$ for determining the amount of gas remaining. It accepts as arguments the work-package as a whole, $\mathbf{p}$ and the core on which it should be executed, $c$. Formally, it is defined as $\Psi_I$:
 \begin{align}
   \Psi_I &\colon \left\{\begin{aligned}
     (\mathbb{P}, \N_\mathsf{C}) &\to \tuple{\Y \cup \mathbb{J}, \N_G} \\
-    (\mathbf{p}, c) &\mapsto \tup{\mathbf{r}, u}\ \where (u, \mathbf{r}, \none) = \Psi_M(\mathbf{p}_\mathbf{c}, 0, \mathsf{G}_I, \mathcal{E}(\mathbf{p}, c), F, \none)
+    (\wpX, c) &\mapsto \begin{cases}
+      \tup{\token{BAD}, 0} &\when |\wpX_\mathbf{c}| = \none \\
+      \tup{\token{BIG}, 0} &\otherwhen |\wpX_\mathbf{c}| > \mathsf{W}_A \\
+      \tup{\mathbf{r}, u} &\otherwise \\
+      \multicolumn{2}{l}{\where (u, \mathbf{r}, \none) = \Psi_M(\wpX_\mathbf{c}, 0, \mathsf{G}_I, \mathcal{E}(\wpX, c), F, \none)}\\
+    \end{cases}\\
   \end{aligned}\right. \\
   \label{eq:isauthorizedmutator}F \in \Omega\ang{\{\}} &\colon
     (n, \gascounter, \registers, \memory) \mapsto \begin{cases}
@@ -104,7 +111,7 @@ Unlike the other invocation functions, the Refine invocation function implicitly
 
 Since this is a transition which can directly affect a substantial amount of on-chain state, our invocation context is accordingly complex. It is a tuple with elements for each of the aspects of state which can be altered through this invocation and beyond the account of the service itself includes the deferred transfer list and several dictionaries for alterations to preimage lookup state, core assignments, validator key assignments, newly created accounts and alterations to account privilege levels.
 
-Formally, we define our result context to be $\mathbf{X}$, and our invocation context to be a pair of these contexts, $\mathbf{X} \times \mathbf{X}$, with one dimension being the regular dimension and generally named $\mathbf{x}$ and the other being the exceptional dimension and being named $\mathbf{y}$. The only function which actually alters this second dimension is $\mathtt{checkpoint}$, $\Omega_C$ and so it is rarely seen.
+Formally, we define our result context to be $\mathbf{X}$, and our invocation context to be a pair of these contexts, $\mathbf{X} \times \mathbf{X}$ (and thus for any value $\mathbf{x} \in \mathbf{X}$ there exists $\mathbf{x}^2 \in \mathbf{X} \times \mathbf{X}$), with one dimension being the regular dimension and generally named $\mathbf{x}$ and the other being the exceptional dimension and being named $\mathbf{y}$. The only function which actually alters this second dimension is $\mathtt{checkpoint}$, $\Omega_C$ and so it is rarely seen.
 \begin{align}
   \mathbf{X} &\equiv \tuple{
     \isa{s}{\N_S},
@@ -130,8 +137,9 @@ We define $\Psi_A$, the Accumulation invocation function as:
     &\to
     \tuple{\partialstate, \defxfers, \H\bm{?}, \N_G, \seq{\tuple{\N_S, \Y}}} \\
     (\mathbf{u}, t, s, g, \mathbf{o}) &\mapsto \begin{cases}
-      \tup{\mathbf{u}, [], \none, 0, \sq{}} &\when \mathbf{u}_\mathbf{d}[s]_\mathbf{c} = \none \\
-      C(\Psi_M(\mathbf{u}_\mathbf{d}[s]_\mathbf{c}, 5, g, \se(t, s, \var{\mathbf{o}}), F, \tup{I(\mathbf{u}, s), I(\mathbf{u}, s)})) &\otherwise
+      \tup{\mathbf{u}, [], \none, 0, \sq{}} &\when \mathbf{c} = \none \vee |\mathbf{c}| > \mathsf{W}_C \\
+      C(\Psi_M(\mathbf{c}, 5, g, \se(t, s, \var{\mathbf{o}}), F, I(\mathbf{u}, s)^2)) &\otherwise \\
+      \where \mathbf{c} = \mathbf{u}_\mathbf{d}[s]_\mathbf{c}&
     \end{cases} \\
   \end{aligned}\right.\\
   I&\colon\left\{\begin{aligned}
@@ -222,7 +230,7 @@ We define the On-Transfer service-account invocation function as $\Psi_T$; it is
   \Psi_T &: \begin{cases}
     (\dict{\N_S}{\mathbb{A}}, \N_T, \N_S, \seq{\mathbb{T}}) &\to \tuple{\mathbb{A}, \N_G} \\
     (\mathbf{d}, t, s, \mathbf{t}) &\mapsto \begin{cases}
-    \tup{\mathbf{s}, 0} &\when \mathbf{s}_\mathbf{c} = \none \vee \mathbf{t} = [] \\
+    \tup{\mathbf{s}, 0} &\when \mathbf{s}_\mathbf{c} = \none \vee |\mathbf{s}_\mathbf{c}| > \mathsf{W}_C \vee \mathbf{t} = [] \\
     \tup{\mathbf{s}', u} &\otherwise \\
     \multicolumn{2}{l}{
 \begin{aligned}
