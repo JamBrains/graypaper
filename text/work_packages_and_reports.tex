@@ -68,7 +68,7 @@ We begin by defining a \emph{work-package}, of set $\workpackage$, and its const
     \isa{\wp¬authcodehost}{\serviceid},\ 
     \isa{\wp¬authcodehash}{\hash},\ 
     \isa{\wp¬authconfig}{\blob},\ 
-    \isa{\wp¬context}{\mathbb{X}},\ 
+    \isa{\wp¬context}{\workcontext},\ 
     \isa{\wp¬workitems}{\seq{\workitem}_{1:\mathsf{I}}}
   }
 \end{equation}
@@ -246,7 +246,7 @@ The above relies on two functions, $\importsegmentdata$ and $\extrinsicdata$ whi
   \end{aligned}
 \end{equation}
 
-We may then define $\wr¬avspec$ as the data availability specification of the package using these two functions together with the yet to be defined \emph{Availability Specifier} function $\newavailabilityspecifier$ (see section \ref{sec:availabiltyspecifier}):
+We may then define $\wr¬avspec$ as the data availability specification of the package using these three functions together with the yet to be defined \emph{Availability Specifier} function $\newavailabilityspecifier$ (see section \ref{sec:availabiltyspecifier}):
 \begin{equation}
   \wr¬avspec = \newavailabilityspecifier(
     \blake(\wpX),
