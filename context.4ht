@@ -1,0 +1,12 @@
+% Intentionally (almost) empty tex4ht hook file.
+%
+% The Gray Paper preamble does `\input{context.tex}`. tex4ht instruments
+% `\input` so that it also auto-loads a matching `context.4ht`; via kpathsea
+% that would resolve to TeX Live's system context.4ht (a 2009 ConTeXt driver),
+% which references an undefined \headertextcontent and derails the preamble
+% ("Missing \begin{document}") during the tex4ebook/make4ht EPUB build.
+%
+% Because "." precedes the texmf tree in TEXINPUTS, this local file is loaded
+% instead, shadowing the broken one. It is only consulted by tex4ht; the
+% xelatex PDF build never loads .4ht files, so this has no effect on the PDF.
+\endinput

@@ -24,8 +24,8 @@ jobs:
           scheme: full
           os: debian
           run: |
-            make4ht -x -u -f epub+dvisvgm_hashes -e epub.mk4 graypaper.tex \
-              || echo "make4ht exited non-zero: $?"
+            tex4ebook -f epub3+dvisvgm_hashes -x -e epub.mk4 graypaper.tex \
+              || echo "tex4ebook exited non-zero: $?"
             echo "=== build output ==="
             ls -la graypaper.epub graypaper.html 2>/dev/null || true
 
