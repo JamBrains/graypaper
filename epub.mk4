@@ -1,5 +1,16 @@
 -- make4ht build recipe for the EPUB conversion of the Gray Paper.
---
+
+-- Render each amsmath display environment (align, align*, alignat, flalign, ...)
+-- as ONE whole-environment SVG image instead of letting tex4ht slice every row
+-- and cell (at & and \\) into separate images. The slicing is what breaks on
+-- our custom \left/\right/\middle macros, producing the "Missing }/$ inserted",
+-- "Display math should end with $$" and "\mathbf allowed only in math mode"
+-- cascades (tex4ht bug #179; the maintainer-endorsed fix is `pic-align`).
+-- Real xelatex still typesets and numbers the environment, so equation numbers
+-- and \label/\ref cross-references are preserved. We append (rather than
+-- overwrite) so tex4ebook's own tex4ht.sty options survive.
+settings.tex4ht_sty_par = settings.tex4ht_sty_par .. ",pic-align"
+
 -- The Gray Paper uses biblatex/biber, so a single compile is not enough:
 -- compile once with the tex4ht instrumentation to emit the .bcf, run biber
 -- to build the bibliography, then compile twice more so cross-references and

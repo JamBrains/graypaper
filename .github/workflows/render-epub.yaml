@@ -18,18 +18,29 @@ jobs:
           cp style/bg_white_plain.tex style/bg.tex
           cp style/logo_black_font.tex style/logo.tex
 
-      - name: Patch \left/\right for tex4ht (EPUB build only)
-        # The preamble redefines \left/\right with a \bgroup ... \aftergroup\egroup
-        # spacing trick. That grouping leaks across align cell boundaries when
-        # tex4ht slices each row into a separate SVG, breaking every align.
-        # Comment out the redefinitions so \left/\right stay as the tex4ht-safe
-        # originals (the \let captures on the preceding lines remain intact).
-        # Cosmetic only for image-based math; the committed source is untouched.
+      - name: Patch source for tex4ht (EPUB build only)
+        # These patches apply to the checked-out copy only; the committed source
+        # and the PDF build are untouched.
+        #
+        # 1. The preamble redefines \left/\right with a \bgroup ... \aftergroup
+        #    \egroup spacing trick whose grouping leaks across math boundaries
+        #    when tex4ht processes inline math. Comment the redefinitions so
+        #    \left/\right stay as the tex4ht-safe originals (the \let captures on
+        #    the preceding lines remain intact). Cosmetic only for image math.
+        #
+        # 2. The body is wrapped in \begin{multicols}{2} ... \end{multicols}.
+        #    Two columns are meaningless for a reflowable EPUB and put TeX into
+        #    two-column mode, which breaks longtable ("not in 1-column mode") and
+        #    tex4ht. There are no \columnbreak uses, so simply drop the wrapper.
         run: |
           sed -i '/\\bgroup\\originalleft/ s|^|% EPUB-disabled: |' preamble.tex
           sed -i '/\\aftergroup\\egroup\\originalright/ s|^|% EPUB-disabled: |' preamble.tex
-          echo "=== patched preamble lines ==="
+          sed -i '/\\begin{multicols}/ s|^|% EPUB-disabled: |' graypaper.tex
+          sed -i '/\\end{multicols}/ s|^|% EPUB-disabled: |' graypaper.tex
+          echo "=== patched preamble \left/\right ==="
           grep -nE 'originalleft|originalright' preamble.tex
+          echo "=== patched graypaper.tex multicols ==="
+          grep -nE 'multicols' graypaper.tex
 
       - name: Build EPUB (math rendered as SVG)
         uses: xu-cheng/texlive-action@v3
