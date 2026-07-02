@@ -1,0 +1,49 @@
+name: Render EPUB
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["epub-export"]
+
+jobs:
+  build_epub:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v4
+
+      - name: Configure plain white background and black logo
+        run: |
+          rm -f style/bg.tex style/logo.tex
+          cp style/bg_white_plain.tex style/bg.tex
+          cp style/logo_black_font.tex style/logo.tex
+
+      - name: Build EPUB (math rendered as SVG)
+        uses: xu-cheng/texlive-action@v3
+        with:
+          scheme: full
+          os: debian
+          run: |
+            make4ht -x -u -f epub+dvisvgm_hashes -e epub.mk4 graypaper.tex \
+              || echo "make4ht exited non-zero: $?"
+            echo "=== build output ==="
+            ls -la graypaper.epub graypaper.html 2>/dev/null || true
+
+      - name: Upload EPUB
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: graypaper-epub
+          path: graypaper.epub
+          if-no-files-found: warn
+
+      - name: Upload build debug bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: epub-build-debug
+          path: |
+            graypaper.log
+            graypaper.html
+            graypaper*.css
+          if-no-files-found: warn

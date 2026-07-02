@@ -1,0 +1,10 @@
+-- make4ht build recipe for the EPUB conversion of the Gray Paper.
+--
+-- The Gray Paper uses biblatex/biber, so a single compile is not enough:
+-- compile once with the tex4ht instrumentation to emit the .bcf, run biber
+-- to build the bibliography, then compile twice more so cross-references and
+-- citations resolve.
+Make:htlatex {}
+Make:biber {}
+Make:htlatex {}
+Make:htlatex {}
