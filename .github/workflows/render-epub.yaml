@@ -48,10 +48,17 @@ jobs:
           scheme: full
           os: debian
           run: |
+            gs --version 2>/dev/null && echo "ghostscript present" || echo "ghostscript MISSING"
+            dvisvgm --version || true
             tex4ebook -f epub3+dvisvgm_hashes -x -e epub.mk4 graypaper.tex \
               || echo "tex4ebook exited non-zero: $?"
             echo "=== build output ==="
             ls -la graypaper.epub graypaper.html 2>/dev/null || true
+            echo "=== dvisvgm dlog errors ==="
+            for f in graypaper*.dlog; do
+              echo "--- $f ---"
+              grep -iE "error|warning|not found|ghostscript|postscript|special|exception|cannot|failed|processing page" "$f" | head -25 || true
+            done 2>/dev/null || true
 
       - name: Upload EPUB
         if: always()
